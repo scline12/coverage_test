@@ -99,17 +99,10 @@
 				"type": "string"
 			}
 		],
-		"deployment_files": [
-			{
-				"source_path": "ci/start_service.sh",
-				"target_path": "bin/start_service.sh"
-			}
-		],
+		"deployment_files": [],
 		"application_init": {},
 		"process": {
-			"init": {
-				"command": "bin/start_service.sh"
-			}
+			"init": {}
 		}
 	},
 	"organization": {
