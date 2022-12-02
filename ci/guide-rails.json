@@ -51,31 +51,19 @@
 							{
 								"name": "Get Dependencies",
 								"definition": "Get Dependencies",
-								"command": "go get -t -d ./...",
+								"command": "go get -t -d ./...\n\n",
 								"properties": null
 							},
 							{
-								"name": "Unit Tests",
-								"definition": "Unit Tests",
-								"command": "set -o pipefail\nginkgo -cover -r -v -skipPackage=pb,test,mock,proto -outputdir=./ | tee ginkgo.output",
-								"properties": null
-							},
-							{
-								"name": "Convert coverage",
-								"definition": "Convert coverage",
-								"command": "cat ginkgo.output 2\u003e\u00261 | go-junit-report \u003e test.xml\ngocov convert *.coverprofile | gocov-xml \u003e coverage.xml",
+								"name": "Unit tests and coverage",
+								"definition": "Unit tests and coverage",
+								"command": "set -o pipefail\nginkgo -cover -r --skip-package=pb,test,mock,proto,testdata | tee ginkgo.output\ncat ginkgo.output 2\u003e\u00261 | go-junit-report \u003e test.xml\ngocov convert coverprofile.out | gocov-xml \u003e coverage.xml",
 								"properties": null
 							},
 							{
 								"name": "Build",
 								"definition": "Build",
 								"command": "go build -o ((application.name))",
-								"properties": null
-							},
-							{
-								"name": "GetTools",
-								"definition": "GetTools",
-								"command": "go get github.com/axw/gocov/gocov\ngo get github.com/AlekSi/gocov-xml\ngo get -u github.com/jstemmer/go-junit-report\ncp ${GOPATH}/bin/gocov* ${GOPATH}/bin/go-junit-report .",
 								"properties": null
 							},
 							{
@@ -90,10 +78,26 @@
 				]
 			}
 		],
-		"exit_actions": {},
-		"default_properties": [],
+		"exit_actions": {
+			"default": {
+				"code_analysis": {
+					"publish": true,
+					"properties": null
+				}
+			}
+		},
+		"default_properties": [
+			{
+				"name": "GO111MODULE",
+				"value": "auto",
+				"type": "string"
+			}
+		],
 		"deployment_files": [],
-		"application_init": {}
+		"application_init": {},
+		"process": {
+			"init": {}
+		}
 	},
 	"organization": {
 		"orgname": "Playground"
