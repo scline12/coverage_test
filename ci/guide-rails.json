@@ -51,7 +51,7 @@
 							{
 								"name": "Get Dependencies",
 								"definition": "Get Dependencies",
-								"command": "go get -t -d ./...\n",
+								"command": "go get -t -d ./...\n\n",
 								"properties": null
 							},
 							{
