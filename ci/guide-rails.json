@@ -81,7 +81,6 @@
 		"exit_actions": {
 			"default": {
 				"code_analysis": {
-					"publish": true,
 					"properties": null
 				}
 			}
