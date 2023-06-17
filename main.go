@@ -6,7 +6,8 @@ import (
 
 func main() {
 	fmt.Println("This is experimental repo, have fun!")
-	for {
+	for i := 0; i < 10; i++ {
+	    fmt.Printf("i: %d\n", i);
 	}
 }
 
