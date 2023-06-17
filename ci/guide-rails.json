@@ -1,0 +1,105 @@
+{
+	"metadata": {
+		"version": 2
+	},
+	"application": {
+		"name": "ScottCoverageTest",
+		"language": "GOLANG",
+		"artifact_store": {
+			"repositories": null
+		}
+	},
+	"pipeline": {
+		"segments": [
+			{
+				"name": "Build",
+				"segment_type": "build",
+				"exit_actions": {},
+				"properties": [
+					{
+						"name": "gopath",
+						"value": "${SEGMENT_BASE_DIR}/cache/go",
+						"description": "GOPATH is set to ${SEGMENT_BASE_DIR}/cache/go by default, when caching is enabled. Caches are maintained on the worker where your build gets allocated. For a new worker assigned to the build, the cache will be re-created"
+					}
+				],
+				"deployment_strategy": {},
+				"application_init": {},
+				"packages": [
+					{
+						"name": "((application.name))",
+						"downloads": [],
+						"files": [
+							"((application.name))*"
+						]
+					}
+				],
+				"instance_tags": [
+					{
+						"name": "application.name",
+						"value": "((application.name))"
+					}
+				],
+				"cache_info": {
+					"paths": [
+						"((gopath))"
+					]
+				},
+				"tasks": [
+					{
+						"name": "ScottCoverageTest",
+						"steps": [
+							{
+								"name": "Get Dependencies",
+								"definition": "Get Dependencies",
+								"command": "go get -t -d ./...",
+								"properties": null
+							},
+							{
+								"name": "Unit tests and coverage",
+								"definition": "Unit tests and coverage",
+								"command": "set -o pipefail\nginkgo -cover -r --skip-package=pb,test,mock,proto,testdata | tee ginkgo.output\ncat ginkgo.output 2\u003e\u00261 | go-junit-report \u003e test.xml\ngocov convert coverprofile.out | gocov-xml \u003e coverage.xml",
+								"properties": null
+							},
+							{
+								"name": "Build",
+								"definition": "Build",
+								"command": "go build -o ((application.name))",
+								"properties": null
+							},
+							{
+								"name": "Build Instrumented",
+								"definition": "Build Instrumented",
+								"command": "go test -c -coverpkg=all -covermode=count -o ((application.name))-instrumented",
+								"properties": null
+							}
+						],
+						"docker_options": {}
+					}
+				]
+			}
+		],
+		"exit_actions": {
+			"default": {
+				"code_analysis": {
+					"publish": true,
+					"properties": null
+				}
+			}
+		},
+		"default_properties": [
+			{
+				"name": "GO111MODULE",
+				"value": "auto",
+				"type": "string"
+			}
+		],
+		"deployment_files": [],
+		"application_init": {},
+		"process": {
+			"init": {}
+		}
+	},
+	"organization": {
+		"orgname": "Playground"
+	}
+}
